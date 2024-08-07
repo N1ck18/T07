@@ -26,6 +26,7 @@ int main() {
     free(data);
     return 0;
 }
+
 void sort(int *a, int n) {
     for (int j = 0; j < n; j++) {
         int move = 0;
