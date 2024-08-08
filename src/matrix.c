@@ -14,6 +14,8 @@ void output_dinamic_matrix(int x, int y, int **matrix);
 int **create_single_array_matrix(int x, int y);
 int **create_two_array_matrix(int x, int y);
 int **create_slow_matrix(int x, int y);
+//int** make_static_ptr(int *data, int **ptr, int n , int m);
+int input_dinamic_matrix_(int x, int y, int **matrix);
 
 int main() {
     int result = 1;
@@ -23,16 +25,20 @@ int main() {
     if (!input_menu(&menu) || !input_matrix_size(&x, &y)) {
         result = 0;
     }
-    if (result != 0) {
+    if (result != 0 && x <= NMAX && x > 0 && y > 0 && y <= NMAX) {
         if (menu == 1) {
-            int data[x][y];
-            if (x <= NMAX && y <= NMAX && input_static_matrix(x, y, data)) {
-                output_static_matrix(x, y, data);
+            int data[y][x];
+            int **ptr_data = (int**)data;
+            if (input_dinamic_matrix_(x, y, ptr_data)) {
+                output_dinamic_matrix(x, y, ptr_data);
+            /* if (x <= NMAX && y <= NMAX && input_static_matrix(x, y, data)) {
+                output_static_matrix_(x, y, data); */
             } else
                 result = 0;
         } else if (menu == 2) {
             int **data = create_single_array_matrix(x, y);
-            if (input_dinamic_matrix(x, y, data)) {
+            
+            if (input_dinamic_matrix_(x, y, data)) {
                 output_dinamic_matrix(x, y, data);
             } else
                 result = 0;
@@ -62,11 +68,11 @@ int main() {
     return 0;
 }
 
-int **create_two_array_matrix(int x, int y) {
-    int *data = malloc(sizeof(int) * x * y);
-    int **ptr = (int **)malloc(sizeof(int) * y);
-    for (int i = 0; i < y; i++) {
-        *(ptr + i) = data + x * i;
+int **create_two_array_matrix(int n, int m) {
+    int *data = malloc(sizeof(int) * n * m);
+    int **ptr = (int **)malloc(sizeof(int*) * m);
+    for (int i = 0; i < m; i++) {
+        *(ptr + i) = data + n * i;
     }
     return ptr;
 }
@@ -89,6 +95,20 @@ int **create_single_array_matrix(int x, int y) {
 }
 
 void output_static_matrix(int x, int y, int matrix[x][y]) {
+    for (int i = 0; i < y; i++) {
+        for (int j = 0; j < x; j++) {
+            printf("%d", matrix[i][j]);
+            if (j != x - 1) {
+                printf(" ");
+            }
+        }
+        if (i != y - 1) {
+            printf("\n");
+        }
+    }
+}
+
+void output_static_matrix_(int x, int y, int **matrix) {
     for (int i = 0; i < y; i++) {
         for (int j = 0; j < x; j++) {
             printf("%d", matrix[i][j]);
@@ -140,6 +160,22 @@ int input_dinamic_matrix(int x, int y, int **matrix) {
     for (int i = 0; i < y; i++) {
         for (int j = 0; j < x; j++) {
             if (scanf("%d", &matrix[i][j]) != 1) {
+                result = 0;
+            }
+        }
+    }
+    if (getchar() != '\n') {
+        result = 0;
+    }
+    return result;
+}
+
+int input_dinamic_matrix_(int x, int y, int **matrix) {
+    int result = 1;
+    for (int i = 0; i < y; i++) {
+        for (int j = 0; j < x; j++) {
+            int *ptr =(int*)(matrix + i * x + j);
+            if (scanf("%d", ptr) != 1) {
                 result = 0;
             }
         }

@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #define N 15
 #define M 13
 
@@ -5,13 +8,14 @@ void transform(int *buf, int **matr, int n, int m);
 void make_picture(int **picture, int n, int m);
 void reset_picture(int **picture, int n, int m);
 
-void main()
+int main()
 {
    int picture_data[N][M];
    int *picture[N];
    transform(picture_data, picture, N, M);
 
-   make_picture(picture, );
+   make_picture(picture, N, M);
+   print_picture(picture, N, M);
 }
 
 void make_picture(int **picture, int n, int m)
@@ -34,6 +38,19 @@ void make_picture(int **picture, int n, int m)
    for (int i = 0; i < length_frame_w; i++)
    {
       picture[0][i] = frame_w[i];
+   }
+
+   
+   
+}
+
+void print_picture(int **picture, int n, int m) {
+   for (int i = 0; i < n; i++)
+   {
+      for (int j = 0; j < m; j++)
+      {
+         printf("%d", picture[i][j]);
+      }
    }
 }
 
