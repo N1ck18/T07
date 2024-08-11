@@ -5,7 +5,7 @@
 
 int **create_two_array_matrix(int x, int y);
 int **create_slow_matrix(int x, int y);
-void output_static_matrix(int x, int y, int matrix[x][y]);
+void output_static_matrix(int x, int y, int matrix[y][x]);
 int input_int(int *n);
 void output_dinamic_matrix(int x, int y, int **matrix);
 int **create_single_array_matrix(int x, int y);
@@ -13,7 +13,7 @@ int input_dinamic_matrix(int x, int y, int **matrix);
 void print_minmax(int *max, int *min, int n, int m);
 void min_max(int **matrix, int n, int m);
 int input_matrix_size(int *n, int *m);
-int input_static_matrix(int x, int y, int matrix[x][y]);
+int input_static_matrix(int x, int y, int matrix[y][x]);
 void min_max_static(int n, int m, int matrix[m][n]);
 
 int main()
@@ -26,7 +26,7 @@ int main()
     {
         if (command == 1)
         {
-            int data[m][n];
+            int data[NMAX][NMAX];
             if (input_static_matrix(n, m, data))
             {
                 output_static_matrix(n, m, data);
@@ -112,8 +112,8 @@ void print_minmax(int *max, int *min, int n, int m)
 
 void min_max_static(int n, int m, int matrix[m][n])
 {
-    int max[m];
-    int min[n];
+    int max[NMAX];
+    int min[NMAX];
 
     for (int i = 0; i < n; i++)
     {
@@ -134,8 +134,8 @@ void min_max_static(int n, int m, int matrix[m][n])
 
 void min_max(int **matrix, int n, int m)
 {
-    int max[m];
-    int min[n];
+    int max[NMAX];
+    int min[NMAX];
 
     for (int i = 0; i < n; i++)
     {
@@ -187,7 +187,7 @@ int input_matrix_size(int *n, int *m)
     return result;
 }
 
-int input_static_matrix(int x, int y, int matrix[x][y])
+int input_static_matrix(int x, int y, int matrix[y][x])
 {
     int result = 1;
     for (int i = 0; i < y; i++)
@@ -246,13 +246,13 @@ void output_dinamic_matrix(int x, int y, int **matrix)
     }
 }
 
-int **create_two_array_matrix(int x, int y)
+int **create_two_array_matrix(int n, int m)
 {
-    int *data = malloc(sizeof(int) * x * y);
-    int **ptr = (int **)malloc(sizeof(int) * y);
-    for (int i = 0; i < y; i++)
+    int *data = malloc(sizeof(int) * n * m);
+    int **ptr = (int **)malloc(sizeof(int *) * m);
+    for (int i = 0; i < m; i++)
     {
-        *(ptr + i) = data + x * i;
+        *(ptr + i) = data + n * i;
     }
     return ptr;
 }
@@ -278,7 +278,7 @@ int **create_single_array_matrix(int x, int y)
     return data;
 }
 
-void output_static_matrix(int x, int y, int matrix[x][y])
+void output_static_matrix(int x, int y, int matrix[y][x])
 {
     for (int i = 0; i < y; i++)
     {
