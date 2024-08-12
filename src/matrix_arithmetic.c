@@ -1,16 +1,18 @@
-
+#include <stdlib.h>
+#include <stdio.h>
 
 int input_int(int *n);
 int input_matrix_size(int *x, int *y);
+int **create_two_array_matrix(int n, int m);
 void free_matrix(int **matrix, int m, int type);
 
-int input(int **matrix, int *n, int *m);
-void output(int **matrix, int n, int m);
+int input_dinamic_matrix(int x, int y, int **matrix);
+void output_dinamic_matrix(int x, int y, int **matrix);
 int sum(int **matrix_first, int n_first, int m_first, int **matrix_second,
-        int n_second, int m_second, int **matrix_result, int *n_result, int *m_result);
+        int n_second, int m_second, int **matrix_result, int n_result, int m_result);
 int transpose(int **matrix, int n, int m);
-int mul(int **matrix_first, int n_first, int m_first, int **matrix_second,
-        int n_second, int m_second, int **matrix_result, int *n_result, int *m_result);
+int mul(int **matrix_first, int n_first, int **matrix_second,
+        int m_second, int **matrix_result, int n_result, int m_result);
 
 int main()
 {
@@ -21,7 +23,7 @@ int main()
     int m2 = 0;
     int n2 = 0;
     int **data;
-    if (input_int(&command) && input_matrix_size(&n, &m) && m > 0 && n > 0 && command < 1 && command > 3)
+    if (input_int(&command) && input_matrix_size(&n, &m) && m > 0 && n > 0 && command > 0 && command < 4)
     {
         data = create_two_array_matrix(n, m);
         if (!input_dinamic_matrix(n, m, data))
@@ -44,19 +46,20 @@ int main()
             }
             free_matrix(result, m, 2);
         }
+        // mul
         else if (command == 2 && error != 1)
         {
-            int n_r = n < n2 ? n2 : n;
-            int m_r = m < m2 ? m2 : m;
-            int **result = create_two_array_matrix(n_r, m_r);
-            if (mul(data, n, m, data2, n2, m2, result, n_r, m_r))
+            int **result = create_two_array_matrix(m, n2);
+            if (mul(data, n, data2, m2, result, m, n2))
             {
                 output_dinamic_matrix(n, m, result);
             }
             free_matrix(result, m, 2);
         }
+        // transporent
         else if (command == 3 && error != 1)
         {
+
         }
         free_matrix(data2, m2, 2);
     }
@@ -70,25 +73,38 @@ int main()
     printf("\n");
 }
 
-int mul(int **matrix_first, int n_first, int m_first, int **matrix_second,
-        int n_second, int m_second, int **matrix_result, int *n_result, int *m_result) {
-            int result = 1;
-    if (1)
+/* int transpose(int **matrix, int n, int m) {
+    int result = 1;
+
+    return result;
+} */
+
+int mul(int **matrix_first, int n_first, int **matrix_second,
+        int m_second, int **matrix_result, int n_result, int m_result)
+{
+    int result = 1;
+    if (n_first == m_second)
     {
         for (int i = 0; i < m_result; i++)
         {
             for (int j = 0; j < n_result; j++)
             {
-                *(*(matrix_result + i) + j) = matrix_first[i][j] + matrix_second[i][j];
+                int sum = 0;
+                for (int k = 0; k < n_first; k++)
+                {
+                    sum += matrix_first[i][k] * matrix_second[k][i];
+                }
+                *(*(matrix_result + i) + j) = sum;
             }
         }
     }
-    else result = 0;
+    else
+        result = 0;
     return result;
-        }
+}
 
 int sum(int **matrix_first, int n_first, int m_first, int **matrix_second,
-        int n_second, int m_second, int **matrix_result, int *n_result, int *m_result)
+        int n_second, int m_second, int **matrix_result, int n_result, int m_result)
 {
     int result = 1;
     if (n_first == n_second && m_first == m_second)
@@ -101,7 +117,8 @@ int sum(int **matrix_first, int n_first, int m_first, int **matrix_second,
             }
         }
     }
-    else result = 0;
+    else
+        result = 0;
     return result;
 }
 
@@ -168,6 +185,26 @@ void output_dinamic_matrix(int x, int y, int **matrix)
             printf("\n");
         }
     }
+}
+
+int input_dinamic_matrix(int x, int y, int **matrix)
+{
+    int result = 1;
+    for (int i = 0; i < y; i++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            if (scanf("%d", &matrix[i][j]) != 1)
+            {
+                result = 0;
+            }
+        }
+    }
+    if (getchar() != '\n')
+    {
+        result = 0;
+    }
+    return result;
 }
 
 int input_matrix_size(int *n, int *m)
