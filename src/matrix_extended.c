@@ -12,7 +12,7 @@ int **create_single_array_matrix(int x, int y);
 int input_dinamic_matrix(int x, int y, int **matrix);
 void print_minmax(int *max, int *min, int n, int m);
 void min_max(int **matrix, int n, int m);
-int input_matrix_size(int *n, int *m);
+int input_matrix_size(int *m, int *n);
 int input_static_matrix(int x, int y, int matrix[y][x]);
 void min_max_static(int n, int m, int matrix[m][n]);
 
@@ -22,7 +22,7 @@ int main()
     int command = 0;
     int m = 0;
     int n = 0;
-    if (input_int(&command) && input_matrix_size(&n, &m) && m <= NMAX && n <= NMAX && m > 0 && n > 0)
+    if (input_int(&command) && input_matrix_size(&m, &n) && m <= NMAX && n <= NMAX && m > 0 && n > 0)
     {
         if (command == 1)
         {
@@ -176,11 +176,11 @@ int input_int(int *n)
     return result;
 }
 
-int input_matrix_size(int *n, int *m)
+int input_matrix_size(int *m, int *n)
 {
     int result = 0;
     char ch;
-    if (scanf("%d %d", n, m) == 2 && ((ch = getchar()) == ' ' || ch == '\n'))
+    if (scanf("%d %d", m, n) == 2 && ((ch = getchar()) == ' ' || ch == '\n'))
     {
         result = 1;
     }

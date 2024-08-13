@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 int input_int(int *n);
-int input_matrix_size(int *x, int *y);
+int input_matrix_size(int *m, int *n);
 int **create_two_array_matrix(int n, int m);
 void free_matrix(int **matrix, int m, int type);
 
@@ -10,7 +10,7 @@ int input_dinamic_matrix(int x, int y, int **matrix);
 void output_dinamic_matrix(int x, int y, int **matrix);
 int sum(int **matrix_first, int n_first, int m_first, int **matrix_second,
         int n_second, int m_second, int **matrix_result, int n_result, int m_result);
-int transpose(int **matrix, int n, int m);
+void transpose(int **matrix, int n, int m, int **result_matrix);
 int mul(int **matrix_first, int n_first, int **matrix_second,
         int m_second, int **matrix_result, int n_result, int m_result);
 
@@ -23,7 +23,7 @@ int main()
     int m2 = 0;
     int n2 = 0;
     int **data;
-    if (input_int(&command) && input_matrix_size(&n, &m) && m > 0 && n > 0 && command > 0 && command < 4)
+    if (input_int(&command) && input_matrix_size(&m, &n) && m > 0 && n > 0 && command > 0 && command < 4)
     {
         data = create_two_array_matrix(n, m);
         if (!input_dinamic_matrix(n, m, data))
@@ -31,7 +31,16 @@ int main()
     }
     else
         error = 1;
-    if (error != 1 && input_matrix_size(&n2, &m2) && m2 > 0 && n2 > 0)
+
+    // transporent
+    if (command == 3 && error != 1)
+    {
+        int **result = create_two_array_matrix(m, n);
+        transpose(data, n, m, result);
+        output_dinamic_matrix(m, n, result);
+        free_matrix(result, n, 2);
+    }
+    else if (error != 1 && input_matrix_size(&n2, &m2) && m2 > 0 && n2 > 0)
     {
         int **data2 = create_two_array_matrix(n2, m2);
         if (!input_dinamic_matrix(n2, m2, data2))
@@ -44,24 +53,22 @@ int main()
             {
                 output_dinamic_matrix(n, m, result);
             }
+            else
+                error = 1;
             free_matrix(result, m, 2);
         }
         // mul
         else if (command == 2 && error != 1)
         {
-            int **result = create_two_array_matrix(m, n2);
-            if (mul(data, n, data2, m2, result, m, n2))
+            int **result = create_two_array_matrix(n2, m);
+            if (mul(data, n, data2, m2, result, n2, m))
             {
-                output_dinamic_matrix(n, m, result);
+                output_dinamic_matrix(n2, m, result);
             }
+            else
+                error = 1;
             free_matrix(result, m, 2);
         }
-        // transporent
-        else if (command == 3 && error != 1)
-        {
-
-        }
-        free_matrix(data2, m2, 2);
     }
     else
         error = 1;
@@ -73,11 +80,16 @@ int main()
     printf("\n");
 }
 
-/* int transpose(int **matrix, int n, int m) {
-    int result = 1;
-
-    return result;
-} */
+void transpose(int **matrix, int n, int m, int **result_matrix)
+{
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            result_matrix[j][i] = matrix[i][j];
+        }
+    }
+}
 
 int mul(int **matrix_first, int n_first, int **matrix_second,
         int m_second, int **matrix_result, int n_result, int m_result)
@@ -92,7 +104,7 @@ int mul(int **matrix_first, int n_first, int **matrix_second,
                 int sum = 0;
                 for (int k = 0; k < n_first; k++)
                 {
-                    sum += matrix_first[i][k] * matrix_second[k][i];
+                    sum += matrix_first[i][k] * matrix_second[k][j];
                 }
                 *(*(matrix_result + i) + j) = sum;
             }
@@ -121,7 +133,7 @@ int sum(int **matrix_first, int n_first, int m_first, int **matrix_second,
         result = 0;
     return result;
 }
-
+// 2 - two array
 void free_matrix(int **matrix, int m, int type)
 {
     switch (type)
@@ -207,11 +219,11 @@ int input_dinamic_matrix(int x, int y, int **matrix)
     return result;
 }
 
-int input_matrix_size(int *n, int *m)
+int input_matrix_size(int *m, int *n)
 {
     int result = 0;
     char ch;
-    if (scanf("%d %d", n, m) == 2 && ((ch = getchar()) == ' ' || ch == '\n'))
+    if (scanf("%d %d", m, n) == 2 && ((ch = getchar()) == ' ' || ch == '\n'))
     {
         result = 1;
     }

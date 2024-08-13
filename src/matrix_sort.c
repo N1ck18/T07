@@ -4,7 +4,7 @@
 
 int input_int(int *n);
 // int input_menu(int *menu);
-int input_matrix_size(int *x, int *y);
+int input_matrix_size(int *m, int *n);
 int input_dinamic_matrix(int x, int y, int **matrix);
 void output_dinamic_matrix(int x, int y, int **matrix);
 int **create_single_array_matrix(int x, int y);
@@ -21,7 +21,7 @@ int main()
     int command = 0;
     int m = 0;
     int n = 0;
-    if (input_int(&command) && input_matrix_size(&n, &m) && m > 0 && n > 0 && command > 0 && command < 4)
+    if (input_int(&command) && input_matrix_size(&m, &n) && m > 0 && n > 0 && command > 0 && command < 4)
     {
         if (command == 1)
         {
@@ -178,13 +178,13 @@ int input_menu(int *menu)
     return result;
 }
 
-int input_matrix_size(int *x, int *y)
+int input_matrix_size(int *m, int *n)
 {
-    int result = 1;
+    int result = 0;
     char ch;
-    if (scanf("%d %d", x, y) != 2 || *x <= 0 || *y <= 0 || ((ch = getchar()) != '\n'))
+    if (scanf("%d %d", m, n) == 2 && ((ch = getchar()) == ' ' || ch == '\n'))
     {
-        result = 0;
+        result = 1;
     }
     return result;
 }
